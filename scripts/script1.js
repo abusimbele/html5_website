@@ -7,19 +7,19 @@
 var coordsHTML5;
 
 //javascript executed after window is loaded.
-window.onload = main;
+window.onload = mainfct;
 
 
-function main(){
-    if (getMyLocation()){
+function mainfct(){
+    getMyLocation()
     }
     
 
-}
+
 
 
 /**
- *MAIN
+ *
  *This function is responsible for html5-geolocation-magic!
  *@return: return true if location information is available, otherwise false
  */ 
@@ -67,6 +67,7 @@ function displayLocation(position){
     var longitude = position.coords.longitude;
     var div = document.getElementById("location");
     div.innerHTML="Lat: " + latitude + " Long: " + longitude; 
+      //window.alert("Buzz2");
     
     showMap(coordsHTML5);
     
@@ -102,12 +103,13 @@ function displayError(error){
   #######################*/
 
 
-var map;
+var mapGoogle;
 
-var mapOptions;
+
 
 //location in the DOM for the Google-Map
-var mapDiv = document.getElementById("google_maps");
+
+
 
 
 /**
@@ -120,17 +122,23 @@ function showMap(coords){
      * Transform the html5 geolocation-Lat and Long to an google-maps LatLong-Object
      */
     
-    var googleLatAndLong = new google.maps.LatLong(coords.latitude,coords.longitude);
+    var googleLatAndLong = new google.maps.LatLng(coords.latitude,coords.longitude);
+    
+    
     
    
     //Options-object for google-maps
-    mapOptions = {
-        zoom:       10,
+     mapOptions = {
+        zoom:       15,
         center:     googleLatAndLong,
-        mapTypeId:  MapTypeId.ROADMAP //other options: SATELLITE, HYPRID
+        mapTypeId:  google.maps.MapTypeId.ROADMAP //other options: SATELLITE, HYPRID
     };
     
-    map = new google.maps.Map(mapDiv,mapOptions);   
+    var mapDiv = document.getElementById("googlemaps"); 
+    
+    mapGoogle = new google.maps.Map(mapDiv,mapOptions);  
+   
+        
     
 }
 
