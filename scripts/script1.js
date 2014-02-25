@@ -137,18 +137,35 @@ function showMap(coords){
     var mapDiv = document.getElementById("googlemaps"); 
     
     mapGoogle = new google.maps.Map(mapDiv,mapOptions);  
-   
-        
     
+    addMarker(mapGoogle,googleLatAndLong,"Current Position","Here you are!");
+   
 }
 
 
 
-
-
-
-
-
-
-
+function addMarker(map,googleLatAndLong,title,content){
+    
+    var markerOptions = {
+        position    :   googleLatAndLong,
+        map         :   map,
+        title       :   title,
+        clickable   :   true
+    };
+    
+    
+    var infoWindowOptions={
+        content     :   content,
+        position    :   googleLatAndLong
+    };
+    
+    var infoWindow = new google.maps.InfoWindow(infoWindowOptions);
+    
+    var marker = new google.maps.Marker(markerOptions);
+    
+    google.maps.event.addListener(marker,"click",function(){infoWindow.open(map);});
+    
+    
+    
+}
 
