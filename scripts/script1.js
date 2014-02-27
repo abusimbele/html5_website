@@ -61,7 +61,7 @@ function getMyLocation(continousTracking){
     var geo_options = {
     enableHighAccuracy: true,//energy vs. exact position 
     maximumAge        : 0, // through cache and old? we use: new postion without cache!
-    timeout           : 10000 // how long to react for the browser untill an error will be thrown #default:infinity # we use: reaction time of 10s for the browser, because GPS needs its time
+    timeout           : 2000 // how long to react for the browser untill an error will be thrown #default:infinity # we use: reaction time of 10s for the browser, because GPS needs its time
     };
     
     //Check if geolocation is available and if so, connect the handler!
@@ -118,7 +118,6 @@ function displayLocation(position){
  * This function handles errors raised by getting the current position and let the browser show an alert-window with specific an error-message.
  */
 function displayError(error){
-     window.alert("fct:error reached");
     
     //Error-Type-Object that consits of all possible error-types that may occur.   
     var errorTypes ={
