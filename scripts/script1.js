@@ -10,6 +10,9 @@ var coordsHTML5;
 window.onload = mainfct;
 
 
+/**
+ * This is the main-procedure for this script
+ */
 function mainfct(){
     getMyLocation()
     }
@@ -17,19 +20,24 @@ function mainfct(){
 
 
 
+/*########################
+  #  HTML5-Geolocation   #
+  ########################*/
+
+
 
 /**
  *
- *This function is responsible for html5-geolocation-magic!
- *@return: return true if location information is available, otherwise false
+ * This function is responsible for html5-geolocation-magic!
+ * @return: return true if location information is available, otherwise false
  */ 
 function getMyLocation(){
     
     // Geolocation options for enery-saving(accuracy), maximumAge for "realtime-" behaviour and timeout for faster error-handling (infinety otherwise!).
     var geo_options = {
-    enableHighAccuracy: true, 
-    maximumAge        : 30000, 
-    timeout           : 20000
+    enableHighAccuracy: true,//energy vs. exact position 
+    maximumAge        : 0, // through cache and old? we use: new postion without cache!
+    timeout           : 1000 // how long to react for the browser untill an error will be thrown #default:infinity # we use: reaction time of 1s for the browser
     };
     
     //Check if geolocation is available and if so, connect the handler!
@@ -42,8 +50,8 @@ function getMyLocation(){
 }
 
 /**
- *Checks if location information are available 
- *If no location-information exists an alert-window will be shown
+ * Checks if location information are available 
+ * If no location-information exists an alert-window will be shown
  */
 function checkLocationAvailable(){
     if(navigator.geolocation){
@@ -58,8 +66,8 @@ function checkLocationAvailable(){
 
 
 /**
- *Handler
- *This function needs the position-object from geolocation and fills the DOM-element div with id "location" with the latidude and longitude of the current location.   
+ * Handler
+ * This function needs the position-object from geolocation and fills the DOM-element div with id "location" with the latidude and longitude of the current location.   
  */
 function displayLocation(position){
     coordsHTML5 = position.coords;
@@ -67,7 +75,8 @@ function displayLocation(position){
     var longitude = position.coords.longitude;
     var div = document.getElementById("location");
     div.innerHTML="Lat: " + latitude + " Long: " + longitude; 
-      //window.alert("Buzz2");
+    
+    showAccuracy(position);
     
     showMap(coordsHTML5);
     
@@ -76,7 +85,7 @@ function displayLocation(position){
 
 
 /**
- *This function handles errors raised by getting the current position and let the browser show an alert-window with specific an error-message.
+ * This function handles errors raised by getting the current position and let the browser show an alert-window with specific an error-message.
  */
 function displayError(error){
      window.alert("fct:error reached");
@@ -96,6 +105,13 @@ function displayError(error){
 
 }
 
+/**
+ * This
+ */
+function showAccuracy(position){
+    var div = document.getElementById("accuracy");
+    div.innerHTML="The actual accuracy to estimate your current location is ca.: " + (position.coords.accuracy/1000)+"km";
+}
 
 
 /*#######################
@@ -107,10 +123,6 @@ var mapGoogle;
 
 
 
-//location in the DOM for the Google-Map
-
-
-
 
 /**
  * This function sets the google-map with the current location to the DOM.
@@ -119,7 +131,7 @@ var mapGoogle;
 function showMap(coords){
     
     /**
-     * Transform the html5 geolocation-Lat and Long to an google-maps LatLong-Object
+     * Transform the html5 geolocation-Lat and -Long to an google-maps LatLong-Object
      */
     
     var googleLatAndLong = new google.maps.LatLng(coords.latitude,coords.longitude);
@@ -143,7 +155,9 @@ function showMap(coords){
 }
 
 
-
+/**
+ * This function adds adds a marker to a map and shows a tooltip and a info-window after a click-event
+ */
 function addMarker(map,googleLatAndLong,title,content){
     
     var markerOptions = {
@@ -154,15 +168,17 @@ function addMarker(map,googleLatAndLong,title,content){
     };
     
     
+    //Options for the info-window
     var infoWindowOptions={
-        content     :   content,
-        position    :   googleLatAndLong
+        content     :   content, //text that will be shown
+        position    :   googleLatAndLong //geolocation of the marker
     };
     
     var infoWindow = new google.maps.InfoWindow(infoWindowOptions);
     
     var marker = new google.maps.Marker(markerOptions);
     
+    //UI-interaction with listener and handler
     google.maps.event.addListener(marker,"click",function(){infoWindow.open(map);});
     
     
