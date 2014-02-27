@@ -29,20 +29,22 @@ function mainfct(){
 /**
  *
  * This function is responsible for html5-geolocation-magic!
- * @return: return true if location information is available, otherwise false
+ * @continousTracking: if true, the position will be continous renewed
+ * @return: return true if location information is available, otherwise false. default: false
  */ 
-function getMyLocation(){
-    
+function getMyLocation(continousTracking){
+    continousTracking = typeof continousTracking === 'undefined' ? continousTracking : false; //default value
     // Geolocation options for enery-saving(accuracy), maximumAge for "realtime-" behaviour and timeout for faster error-handling (infinety otherwise!).
     var geo_options = {
     enableHighAccuracy: true,//energy vs. exact position 
     maximumAge        : 0, // through cache and old? we use: new postion without cache!
-    timeout           : 3000 // how long to react for the browser untill an error will be thrown #default:infinity # we use: reaction time of 1s for the browser
+    timeout           : 10000 // how long to react for the browser untill an error will be thrown #default:infinity # we use: reaction time of 10s for the browser, because GPS needs its time
     };
     
     //Check if geolocation is available and if so, connect the handler!
     if(checkLocationAvailable()) {
-        navigator.geolocation.getCurrentPosition(displayLocation,displayError,geo_options);
+        if(continousTracking){navigator.geolocation.watchPosition(displayLocation,displayError,geo_options);}        
+        else{ navigator.geolocation.getCurrentPosition(displayLocation,displayError,geo_options);}
         return true;
     }
     return false;
@@ -80,7 +82,7 @@ function displayLocation(position){
     
     showMap(coordsHTML5);
     
-
+    //window.alert(position.timestamp);
 }
 
 
@@ -148,7 +150,10 @@ function showMap(coords){
     
     var mapDiv = document.getElementById("googlemaps"); 
     
-    mapGoogle = new google.maps.Map(mapDiv,mapOptions);  
+    
+    if(mapGoogle){}
+    else{mapGoogle = new google.maps.Map(mapDiv,mapOptions);}
+    
     
     addMarker(mapGoogle,googleLatAndLong,"Current Position","Here you are!");
    
