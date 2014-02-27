@@ -5,17 +5,40 @@
 
 //geolocation
 var coordsHTML5;
+var watchID;
+var continousTracking=false;
 
 //javascript executed after window is loaded.
 window.onload = mainfct;
+
+
 
 
 /**
  * This is the main-procedure for this script
  */
 function mainfct(){
-    getMyLocation(true);
+    registerEvents();
+    getMyLocation(continousTracking);
+    
     }
+    
+
+/**
+ * This function registers all events we have implemented in the html-file 
+ */
+function registerEvents(){
+    //Regsiter html5-events
+
+    var clearButton = document.getElementById("clearWatch");
+    clearButton.onclick = clearWatch;
+    
+    
+    var watchButton = document.getElementById("watch");
+    watchButton.onclick = function(){getMyLocation(true);window.alert("Tracking activated!");};
+    
+
+}
     
 
 
@@ -33,7 +56,7 @@ function mainfct(){
  * @return: return true if location information is available, otherwise false. default: false
  */ 
 function getMyLocation(continousTracking){
-    continousTracking = typeof continousTracking === 'undefined' ? continousTracking : false; //default value
+    var continousTracking = typeof continousTracking !== 'undefined' ? continousTracking : false; //default value
     // Geolocation options for enery-saving(accuracy), maximumAge for "realtime-" behaviour and timeout for faster error-handling (infinety otherwise!).
     var geo_options = {
     enableHighAccuracy: true,//energy vs. exact position 
@@ -44,12 +67,16 @@ function getMyLocation(continousTracking){
     //Check if geolocation is available and if so, connect the handler!
     //There are two options: 1.) continous tracking that will monitor and reactor on location changes and 2.) only once current-position display
     if(checkLocationAvailable()) {
-        if(continousTracking){navigator.geolocation.watchPosition(displayLocation,displayError,geo_options);}        
-        else{ navigator.geolocation.getCurrentPosition(displayLocation,displayError,geo_options);}
+          if(continousTracking){
+            watchID=navigator.geolocation.watchPosition(displayLocation,displayError,geo_options);
+        }       
+        else{ 
+            navigator.geolocation.getCurrentPosition(displayLocation,displayError,geo_options);
+            }
         return true;
     }
     return false;
-    
+  
 }
 
 /**
@@ -117,6 +144,13 @@ function showAccuracy(position){
 }
 
 
+function clearWatch(){
+    navigator.geolocation.clearWatch(watchID);
+    window.alert("Tracking deactivated!");
+}
+
+
+
 /*#######################
   #   GOOGLE-MAPS       #
   #######################*/
@@ -127,12 +161,13 @@ var mapGoogle;
 
 
 
+
 /**
  * This function sets the google-map with the current location to the DOM.
  * It also initialises the map-variable with the current location and options.
  */
 function showMap(coords){
-    window.alert("Moep!");
+    
     
     /**
      * Transform the html5 geolocation-Lat and -Long to an google-maps LatLong-Object
