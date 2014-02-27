@@ -37,7 +37,7 @@ function getMyLocation(){
     var geo_options = {
     enableHighAccuracy: true,//energy vs. exact position 
     maximumAge        : 0, // through cache and old? we use: new postion without cache!
-    timeout           : 1000 // how long to react for the browser untill an error will be thrown #default:infinity # we use: reaction time of 1s for the browser
+    timeout           : 3000 // how long to react for the browser untill an error will be thrown #default:infinity # we use: reaction time of 1s for the browser
     };
     
     //Check if geolocation is available and if so, connect the handler!
