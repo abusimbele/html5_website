@@ -253,7 +253,6 @@ GeolocationInformationLib.addMarker = function(map,googleLatAndLong,title,conten
  * This method starts the procedure for creating Geo-information and a googlemap
  */
 GeolocationInformationLib.init = function(){
-    alert("INIT");
    GeolocationInformationLib.registerEvents();
    GeolocationInformationLib.getMyLocation(GeolocationInformationLib.continousTracking);
 }
