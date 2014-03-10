@@ -1,6 +1,7 @@
 window.onload = function(){
-    var geo = new GeolocationInformation();
-    //webservice = new Webservice();
+    //var geo = new GeolocationInformation();
+    GeolocationInformationLib.init();
+    var webservice = new Webservice();
     
     
 
