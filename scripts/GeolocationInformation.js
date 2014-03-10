@@ -2,45 +2,40 @@
   #     HTML5            #
   ########################*/
 
-
-//geolocation
-var coordsHTML5;
-var watchID;
-var continousTracking=false;
-
-//javascript executed after window is loaded.
-window.onload = mainfct;
-
-
-
-
 /**
- * This is the main-procedure for this script
+ * Constructor
  */
-function mainfct(){
-    registerEvents();
-    getMyLocation(continousTracking);
+function GeolocationInformation(){
+    
+    //private object-variables
+    
+    //geolocation 
+    var coordsHTML5            =   null;
+    var watchID                =   null;
+    var continousTracking      =   false;
+    
+    //googleMaps
+    var mapGoogle;
+    //this.getMyLocation(continousTracking);
+    
+    
+    /**
+     * private method
+     * This method registers all events we have implemented in the html-file 
+     */
+    function registerEvents(){
+        //Regsiter html5-events
+    
+        var clearButton = document.getElementById("clearWatch");
+        clearButton.onclick = clearWatch;
+        
+        
+        var watchButton = document.getElementById("watch");
+        watchButton.onclick = function(){getMyLocation(true);window.alert("Tracking activated!");};
+        
     
     }
     
-
-/**
- * This function registers all events we have implemented in the html-file 
- */
-function registerEvents(){
-    //Regsiter html5-events
-
-    var clearButton = document.getElementById("clearWatch");
-    clearButton.onclick = clearWatch;
-    
-    
-    var watchButton = document.getElementById("watch");
-    watchButton.onclick = function(){getMyLocation(true);window.alert("Tracking activated!");};
-    
-
-}
-    
-
 
 
 /*########################
@@ -50,7 +45,7 @@ function registerEvents(){
 
 
 /**
- *
+ * private method
  * This function is responsible for html5-geolocation-magic!
  * @continousTracking: if true, the position will be continous renewed
  * @return: return true if location information is available, otherwise false. default: false
@@ -80,6 +75,7 @@ function getMyLocation(continousTracking){
 }
 
 /**
+ * private method
  * Checks if location information are available 
  * If no location-information exists an alert-window will be shown
  */
@@ -95,7 +91,10 @@ function checkLocationAvailable(){
 }
 
 
+
+
 /**
+ * private method
  * Handler
  * This function needs the position-object from geolocation and fills the DOM-element div with id "location" with the latidude and longitude of the current location.   
  */
@@ -115,6 +114,7 @@ function displayLocation(position){
 
 
 /**
+ * private method
  * This function handles errors raised by getting the current position and let the browser show an alert-window with specific an error-message.
  */
 function displayError(error){
@@ -135,14 +135,19 @@ function displayError(error){
 }
 
 /**
+ * private method
  * This
  */
-function showAccuracy(position){
+var showAccuracy = function(position){
     var div = document.getElementById("accuracy");
     div.innerHTML="The actual accuracy to estimate your current location is ca.: " + (position.coords.accuracy/1000)+"km";
 }
 
 
+/**
+ * private method
+ * This method disables continuous tracking
+ */
 function clearWatch(){
     navigator.geolocation.clearWatch(watchID);
     window.alert("Tracking deactivated!");
@@ -155,13 +160,14 @@ function clearWatch(){
   #######################*/
 
 
-var mapGoogle;
+
 
 
 
 
 
 /**
+ * private method
  * This function sets the google-map with the current location to the DOM.
  * It also initialises the map-variable with the current location and options.
  */
@@ -178,7 +184,7 @@ function showMap(coords){
     
    
     //Options-object for google-maps
-     mapOptions = {
+     var mapOptions = {
         zoom:       15,
         center:     googleLatAndLong,
         mapTypeId:  google.maps.MapTypeId.ROADMAP //other options: SATELLITE, HYPRID
@@ -197,6 +203,7 @@ function showMap(coords){
 
 
 /**
+ * private method
  * This function adds adds a marker to a map and shows a tooltip and a info-window after a click-event
  */
 function addMarker(map,googleLatAndLong,title,content){
@@ -225,4 +232,14 @@ function addMarker(map,googleLatAndLong,title,content){
     
     
 }
+
+    //INIT Procedure for: 1.) Start and end continous-tracking ans 2.) get GPS-coordinates and googlemap
+
+
+    registerEvents();
+    getMyLocation(continousTracking);
+
+}
+
+
 
